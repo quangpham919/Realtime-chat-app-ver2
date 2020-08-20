@@ -1,17 +1,17 @@
 import React, {useState, useContext} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {TextField, Button, Typography} from "@material-ui/core";
+import {TextField, Button, Typography, CircularProgress } from "@material-ui/core";
 import {GlobalContext} from "../context/GlobalContext";
 import axios from 'axios';
 import { navigate } from "@reach/router";
 
 const useStyles = makeStyles( theme => ({
     root: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(4),
         display:"flex",
         flexDirection:"column",
         alignItems:"center",
-        padding: "10% 0%"
+        padding: "10rem 0",     
     },
    
     formContainer:{
@@ -23,11 +23,14 @@ const useStyles = makeStyles( theme => ({
         
     },
     input:{
-        width:"30rem",
-        
+        width:"20rem",
+        color:'#1098f7'
     },
     button:{
-        width:"100%",
+        width:"5rem",
+        margin:theme.spacing(3,0)
+    },
+    loading:{
         margin:theme.spacing(3,0)
     }
     
@@ -36,31 +39,40 @@ const useStyles = makeStyles( theme => ({
 
 const UserLogin = () => {
     const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
     const classes = useStyles();
     const SERVER = `https://quang-api-chat.herokuapp.com`
-    const {setToken, setUser, sendUser, token} = useContext(GlobalContext);
+    const {setToken, setUser, sendUser} = useContext(GlobalContext);
     const handleChange = (e) => {
         e.preventDefault();
         
         setName(e.target.value);
     }
 
-
-
     const handleSubmit = (e) => {
-            axios.post(`${SERVER}/`, 
-            {
-                name
-            }).then(response => {
+            e.preventDefault();
+            setLoading(true);
+            const user = {
+                name: name, 
+            }
+            axios.post(`${SERVER}/join`,
+            user)
+            .then(response => {
                 setToken(response.data.token);
+                localStorage.setItem("token",response.data.token)
+                localStorage.setItem("user",name)
                 setUser(name);
-                sendUser({name,token});
+                sendUser({
+                    user: name,  
+                })
+                setLoading(false);
                 navigate(`/chat`);
-
-            }).catch(err => {
+            })
+            .catch(err => {
                 console.error(err);
             });
-        e.preventDefault();
+
+        
       
     }
     return(
@@ -69,10 +81,12 @@ const UserLogin = () => {
                 Guest Join    
             </Typography> 
             <form method="POST" onSubmit={handleSubmit}  className={classes.formContainer}>
-           
             <TextField className={classes.input} fullWidth required value={name} onChange={handleChange} placeholder="Pick a name" id="name" label="Your Name:" variant="outlined"  />    
-            <Button color="primary" type="submit" fullWidth className={classes.button} disabled={!name} > Join </Button>
-           
+            {loading ? 
+            (<CircularProgress className={classes.loading} />) 
+            : (<Button color="primary" type="submit" fullWidth className={classes.button} disabled={!name}> Join </Button>) 
+            }
+            
             </form>        
         </div> 
     )
