@@ -1,8 +1,8 @@
 import React, {useState, useContext,useEffect} from 'react'
 import {makeStyles } from "@material-ui/core/styles"
-import {Paper,Typography,Button, Menu, MenuItem } from '@material-ui/core'
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import IconButton from '@material-ui/core/IconButton';
+import {Paper,Typography,Button } from '@material-ui/core'
+// import MoreVertIcon from '@material-ui/icons/MoreVert';
+// import IconButton from '@material-ui/core/IconButton';
 import {GlobalContext } from "../context/GlobalContext"
 import Message from "../common/Message"
 import SendIcon from '@material-ui/icons/Send';
@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 
 const MessageList = () => {
 
-    const {activeRoom,sendChat,getAllChats,chats,dispatch,socket,addChatMessage} = useContext(GlobalContext) 
+    const {activeRoom,sendChat,getAllChats,chats,socket,addChatMessage} = useContext(GlobalContext) 
     const user = localStorage.getItem("user");
     const classes = useStyles();
     const [message, setMessage] = useState("");
@@ -83,11 +83,10 @@ const MessageList = () => {
      
     useEffect(()=>{
         socket.on("chat message", function(msg){
-
             const token = localStorage.getItem("token");
             addChatMessage(token,msg);   
-            
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     const InputValidate = (message) => {
