@@ -1,11 +1,21 @@
 # Realtime-chat-app-ver2
 This is version 2 of chat application, which was built by MERN stack and Socket.IO
 
-## Available Scripts
+## Getting Started 
 
-In the project directory, you can run:
+### Installing
+ clone this repo and run these scripts in your command line
+```
+cd Realtime-chat-app-ver2
+npm install 
+```
+### Executing program 
+```
+cd Realtime-chat-app-ver2
+npm start
+```
+open browser and go to localhost:3000 to run web app.
 
-### `npm start`
+## Authors
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[Quang Pham](https://github.com/quangpham919)
